@@ -21,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ searchQuery, setSearchQuery }) => {
         <div className="flex flex-col md:flex-row items-center justify-between">
           <div className="flex items-center mb-4 md:mb-0">
             <div className="text-2xl font-bold text-indian-navy">
-              <span className="text-indian-saffron">News</span>
+              <span className="text-indian-saffron">NewZ</span>
               <span className="text-indian-navy">App</span>
               <span className="text-indian-green ml-1">India</span>
             </div>
