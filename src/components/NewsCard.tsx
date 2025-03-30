@@ -38,7 +38,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
   return (
     <div className="h-[400px] perspective-1000">
       <div 
-        className={`relative h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
+        className={`relative h-full transition-transform duration-1000 ease-in-out transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
         onClick={toggleFlip}
       >
         {/* Front of the card */}
