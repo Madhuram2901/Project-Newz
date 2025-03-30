@@ -5,48 +5,64 @@ import StateSelector from '@/components/StateSelector';
 import CategoryFilter from '@/components/CategoryFilter';
 import NewsList from '@/components/NewsList';
 import TrendingTopics from '@/components/TrendingTopics';
-import { mockNewsArticles, mockTrendingTopics } from '@/data/mockData';
+import { mockTrendingTopics } from '@/data/mockData';
 import { NewsArticle } from '@/types/news';
+import { fetchNewsByState } from '@/services/newsService';
+import { indianStates } from '@/data/statesList';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [selectedState, setSelectedState] = useState("30"); // Default to "India"
   const [selectedCategory, setSelectedCategory] = useState("all"); // Default to "All"
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredArticles, setFilteredArticles] = useState<NewsArticle[]>(mockNewsArticles);
+  const [articles, setArticles] = useState<NewsArticle[]>([]);
+  const [filteredArticles, setFilteredArticles] = useState<NewsArticle[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
+  // Get selected state name
+  const getSelectedStateName = () => {
+    return indianStates.find(state => state.id === selectedState)?.name || "India";
+  };
+
+  // Fetch news articles when state or category changes
   useEffect(() => {
-    setIsLoading(true);
+    const fetchNews = async () => {
+      setIsLoading(true);
+      try {
+        const stateName = getSelectedStateName();
+        const fetchedArticles = await fetchNewsByState(stateName, selectedCategory, 3);
+        setArticles(fetchedArticles);
+      } catch (error) {
+        console.error("Failed to fetch news:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch news articles. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, [selectedState, selectedCategory]);
+
+  // Filter articles by search query
+  useEffect(() => {
+    if (!searchQuery) {
+      setFilteredArticles(articles);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase();
+    const filtered = articles.filter(article => 
+      article.title.toLowerCase().includes(query) || 
+      article.summary.toLowerCase().includes(query)
+    );
     
-    // Simulate API call delay
-    setTimeout(() => {
-      let filtered = [...mockNewsArticles];
-      
-      // Filter by state
-      if (selectedState) {
-        const stateName = selectedState === "30" ? "India" : 
-          mockNewsArticles.find(article => article.state)?.state || "";
-        filtered = filtered.filter(article => article.state === stateName);
-      }
-      
-      // Filter by category
-      if (selectedCategory && selectedCategory !== "all") {
-        filtered = filtered.filter(article => article.category === selectedCategory);
-      }
-      
-      // Filter by search query
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        filtered = filtered.filter(article => 
-          article.title.toLowerCase().includes(query) || 
-          article.summary.toLowerCase().includes(query)
-        );
-      }
-      
-      setFilteredArticles(filtered);
-      setIsLoading(false);
-    }, 500);
-  }, [selectedState, selectedCategory, searchQuery]);
+    setFilteredArticles(filtered);
+  }, [articles, searchQuery]);
 
   const handleStateChange = (stateId: string) => {
     setSelectedState(stateId);
@@ -69,8 +85,12 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-3">
             <h2 className="text-2xl font-bold mb-4 text-indian-navy">
-              {selectedState === "30" ? "Top Headlines from India" : 
-               `Top Headlines from ${mockNewsArticles.find(a => a.state !== "India")?.state || ""}`}
+              {getSelectedStateName() === "India" 
+                ? "Top Headlines from India" 
+                : `Top Headlines from ${getSelectedStateName()}`}
+              <span className="text-sm font-normal ml-2 text-gray-600">
+                (Latest 5 articles from past 3 days)
+              </span>
             </h2>
             <NewsList articles={filteredArticles} isLoading={isLoading} />
           </div>
