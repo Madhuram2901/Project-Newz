@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { NewsArticle } from '@/types/news';
 import { formatDistanceToNow } from 'date-fns';
@@ -39,7 +38,8 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
   return (
     <div className="h-[400px] perspective-1000">
       <div 
-        className={`relative h-full transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
+        className={`relative h-full transition-transform duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
+        onClick={toggleFlip}
       >
         {/* Front of the card */}
         <Card className={`absolute w-full h-full backface-hidden overflow-hidden hover:shadow-lg transition-shadow duration-300 animate-fade-in ${isFlipped ? 'invisible' : ''}`}>
@@ -75,7 +75,6 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
               </span>
               
               <button 
-                onClick={toggleFlip} 
                 className="flex items-center text-indian-navy hover:text-indian-saffron transition-colors text-sm"
               >
                 <span className="mr-1">Read details</span>
@@ -86,7 +85,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
         </Card>
 
         {/* Back of the card */}
-        <Card className={`absolute w-full h-full backface-hidden overflow-auto p-4 rotate-y-180 bg-gray-50 ${isFlipped ? '' : 'invisible'}`}>
+        <Card className={`absolute w-full h-full backface-hidden overflow-hidden p-4 rotate-y-180 bg-gray-50 ${isFlipped ? '' : 'invisible'}`}>
           <CardContent className="p-2 flex flex-col h-full">
             <div className="flex items-center justify-between mb-4">
               <span className={`text-xs font-medium px-2 py-1 rounded ${getCategoryColor(article.category)}`}>
@@ -100,7 +99,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
 
             <h3 className="font-bold text-lg mb-3">{article.title}</h3>
             
-            <div className="flex-grow overflow-auto mb-4">
+            <div className="flex-grow mb-4">
               <p className="text-gray-700">{article.summary}</p>
             </div>
             

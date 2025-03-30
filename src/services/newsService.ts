@@ -7,7 +7,7 @@ import { toast } from "sonner";
 // - GNews API (limited requests on free plan)
 // - Contextual Web Search API
 
-const API_KEY = "YOUR_API_KEY_HERE"; // Replace with your actual API key
+const API_KEY = "bd23990419b04b24a155231023ddc5db"; // Replace with your actual API key
 const BASE_URL = "https://newsapi.org/v2";
 
 export const fetchNewsByState = async (
