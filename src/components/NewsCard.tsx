@@ -1,15 +1,16 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { NewsArticle } from '@/types/news';
 import { formatDistanceToNow } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
-import { Clock, ExternalLink } from 'lucide-react';
+import { Clock, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 
 type NewsCardProps = {
   article: NewsArticle;
 };
 
 const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
+  const [showDescription, setShowDescription] = useState(false);
   const timeAgo = formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true });
   
   const getCategoryColor = (category: string) => {
@@ -29,6 +30,10 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
       default:
         return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const toggleDescription = () => {
+    setShowDescription(!showDescription);
   };
 
   return (
@@ -57,11 +62,27 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
           </div>
         </div>
         
-        <h3 className="font-bold text-lg mb-2 line-clamp-2">{article.title}</h3>
+        <div 
+          onClick={toggleDescription}
+          className="cursor-pointer"
+        >
+          <h3 className="font-bold text-lg mb-2 line-clamp-2">{article.title}</h3>
+          
+          <div className="flex items-center text-indian-navy mb-2">
+            <span className="text-sm mr-1">
+              {showDescription ? "Hide details" : "Show details"}
+            </span>
+            {showDescription ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </div>
+          
+          {showDescription && (
+            <div className="my-3 p-3 bg-gray-50 rounded-md border border-gray-100 animate-accordion-down">
+              <p className="text-gray-700">{article.summary}</p>
+            </div>
+          )}
+        </div>
         
-        <p className="text-gray-600 mb-4 line-clamp-2">{article.summary}</p>
-        
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-4">
           <span className="text-xs font-medium bg-gray-100 text-gray-800 px-2 py-1 rounded">
             {article.state}
           </span>
