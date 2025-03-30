@@ -89,7 +89,7 @@ const Index = () => {
                 ? "Top Headlines from India" 
                 : `Top Headlines from ${getSelectedStateName()}`}
               <span className="text-sm font-normal ml-2 text-gray-600">
-                (Latest 5 articles from past 3 days)
+                (Latest 30 articles from past 3 days)
               </span>
             </h2>
             <NewsList articles={filteredArticles} isLoading={isLoading} />

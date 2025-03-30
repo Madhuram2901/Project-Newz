@@ -30,7 +30,7 @@ export const fetchNewsByState = async (
     const queryString = `${stateQuery}${categoryQuery}`;
     
     // Construct the URL with query parameters
-    let url = `${BASE_URL}/everything?q=${encodeURIComponent(queryString)}&from=${fromDateString}&sortBy=publishedAt&apiKey=${API_KEY}&pageSize=5`;
+    let url = `${BASE_URL}/everything?q=${encodeURIComponent(queryString)}&from=${fromDateString}&sortBy=publishedAt&apiKey=${API_KEY}&pageSize=30`;
     
     console.log(`Fetching news with query: ${queryString}`);
     
@@ -62,7 +62,7 @@ export const fetchNewsByState = async (
       imageUrl: article.urlToImage,
       category: category || guessCategory(article.title, article.description),
       state: state
-    })).slice(0, 5); // Ensure we only return top 5
+    })).slice(0, 30); // Ensure we only return top 30
     
   } catch (error) {
     console.error("Error fetching news:", error);
@@ -109,5 +109,5 @@ const getMockNewsByState = (state: string, category?: string): NewsArticle[] => 
     filtered = filtered.filter(article => article.category === category);
   }
   
-  return filtered.slice(0, 5); // Return top 5 articles only
+  return filtered.slice(0, 30); // Return top 30 articles only
 };
