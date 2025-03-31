@@ -1,4 +1,3 @@
-
 import { NewsArticle } from "@/types/news";
 import { toast } from "sonner";
 
@@ -40,7 +39,14 @@ export const fetchNewsByState = async (
       return getMockNewsByState(state, category);
     }
     
-    const response = await fetch(url);
+    // Remove the API call from here and instead call your server endpoint
+    const response = await fetch('/api/news', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ state, category, days }),
+    });
     
     if (!response.ok) {
       const errorData = await response.json();
@@ -110,4 +116,9 @@ const getMockNewsByState = (state: string, category?: string): NewsArticle[] => 
   }
   
   return filtered.slice(0, 30); // Return top 30 articles only
+};
+
+// Create a new server-side function to handle the API request
+export const fetchNewsFromAPI = async (state: string, category?: string, days: number = 3) => {
+  // ... existing code for API call ...
 };
